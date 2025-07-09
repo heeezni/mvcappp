@@ -9,7 +9,7 @@
 </head>
 <body>
 	<!-- ============== VIEW ==================== -->
-	<form action="/blood/advice" method="get"> <!-- 컨트롤러인 서블릿의 가상의 주소 -->
+	<form action="/blood.do" method="post"> <!-- 컨트롤러인 서블릿의 가상의 주소 -->
 		<select name="blood">
 			<option value="">혈액형 선택</option>
 			<option value="A">A형</option>

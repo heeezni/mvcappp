@@ -9,7 +9,7 @@
 </head>
 <body>
 	<!-- ============== VIEW ==================== -->
-	<form action="/color/advice" method="get"> <!-- 컨트롤러인 서블릿의 가상의 주소 -->
+	<form action="/color.do" method="get"> <!-- 컨트롤러인 서블릿의 가상의 주소 (URI 확장자가 .do 여야함)-->
 		<select name="color">
 			<option value="">색상 선택</option>
 			<option value="red">RED</option>
