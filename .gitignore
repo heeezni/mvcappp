@@ -1,3 +1,19 @@
-/.DS_Store
-/build
-/target
+# macOS 시스템 파일 무시
+.DS_Store
+
+# Eclipse 설정 무시 (협업 시 무시, 혼자 쓸 땐 커밋 가능)
+# .classpath
+# .project
+# .settings/
+
+# 빌드 결과물 무시 (필수!)
+/target/
+/build/
+
+# 로그 파일 무시
+*.log
+
+# 임시/백업 파일 무시
+*.bak
+*.swp
+*.tmp
