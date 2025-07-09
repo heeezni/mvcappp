@@ -1,0 +1,32 @@
+# mvcappp 애플리케이션 MVC 흐름 분석
+
+## 1. 개요
+이 애플리케이션은 사용자가 특정 색상을 선택하면 그에 대한 성격이나 조언을 보여주는 간단한 웹 애플리케이션입니다. MVC(Model-View-Controller) 패턴을 적용하여 기능이 각 역할에 따라 파일별로 분리되어 있습니다.
+
+## 2. MVC 구성 요소
+*   **Model:** `ColorManager.java`
+*   **View:** `send.jsp`, `result.jsp`
+*   **Controller:** `ColorController.java`
+*   **설정 파일 (진입점):** `web.xml`
+
+## 3. 처리 흐름 (Step-by-Step)
+1.  **[View] `send.jsp`:** 사용자가 웹 브라우저에서 `send.jsp` 페이지에 접속하여 색상을 선택하고 '전송' 버튼을 누릅니다.
+2.  **[요청]** 브라우저는 form action에 지정된 `/color/advice` URL로 GET 요청을 보냅니다. (예: `/color/advice?color=red`)
+3.  **[설정] `web.xml`:** 웹 서버(Tomcat)는 `/color/advice` 요청을 `colorController`라는 이름의 서블릿에게 전달하도록 매핑되어 있는 것을 확인합니다. 이 서블릿은 `com.sinse.mvcappp.color.controller.ColorController` 클래스입니다.
+4.  **[Controller] `ColorController.java`:**
+    a. `doGet()` 메소드가 호출됩니다.
+    b. `request.getParameter("color")`를 통해 요청된 색상 값을 얻습니다.
+    c. Model인 `ColorManager`의 `getAdvice()` 메소드를 호출하여 비즈니스 로직을 수행하고, 결과 문자열을 반환받습니다.
+    d. `session.setAttribute("msg", ...)`를 통해 반환된 결과 문자열을 세션에 저장합니다.
+    e. `response.sendRedirect("/color/result.jsp")`를 통해 브라우저에게 `/color/result.jsp`로 재접속하라는 명령을 내립니다.
+5.  **[Model] `ColorManager.java`:** Controller로부터 받은 색상 값에 따라 `if-else` 문으로 분기하여 적절한 조언 메시지를 생성하고 반환합니다.
+6.  **[View] `result.jsp`:**
+    a. 브라우저는 Controller의 명령에 따라 `/color/result.jsp` 페이지를 서버에 요청합니다.
+    b. `session.getAttribute("msg")`를 통해 세션에 저장된 조언 메시지를 가져와 화면에 출력하며 흐름이 종료됩니다.
+
+## 4. 파일별 역할 상세
+*   **`send.jsp`:** 사용자에게 색상 선택 UI를 제공하는 시작 화면입니다. (View)
+*   **`result.jsp`:** 처리 결과를 사용자에게 보여주는 결과 화면입니다. (View)
+*   **`ColorController.java`:** `web.xml`을 통해 요청을 받아 분석하고, Model과 View를 중재하는 중앙 제어 장치입니다. (Controller)
+*   **`ColorManager.java`:** 색상에 대한 조언을 결정하는 핵심 비즈니스 로직을 담당합니다. (Model)
+*   **`web.xml`:** 특정 URL 요청(`url-pattern`)을 어떤 서블릿(`servlet-class`)이 처리할지 연결해주는 설정 파일입니다. (Entry Point/Routing)
