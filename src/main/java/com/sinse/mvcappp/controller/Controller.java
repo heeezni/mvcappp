@@ -1,0 +1,12 @@
+package com.sinse.mvcappp.controller;
+
+import java.io.IOException;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+// 모든 컨트롤러의 최상위 객체 정의
+public interface Controller {
+	void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException;
+}

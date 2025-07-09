@@ -17,11 +17,11 @@ import com.sinse.mvcappp.model.ColorManager;
  * 1) JSP는 VIEW로 사용할 것이므로
  * 2) 웹기반의 컨트롤러는 클라이언트의 요청을 받을 수 있어야 하므로
  * */
-public class ColorController {
+public class ColorController implements Controller{
 	
 	ColorManager manager=new ColorManager(); // model에 일시키자!
 	
-	protected void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	public void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
 		/**
 		 * Controller의 5대 업무

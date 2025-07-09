@@ -31,18 +31,18 @@ public class DispatcherServlet extends HttpServlet{
 	 * 어떻게 해야 if문을 없앨 수 있을꺄? 
 	 * */
 	protected void doRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		Controller controller=null;
 		
 		if(request.getRequestURI().equals("/blood.do")) { // 클라이언트의 요청이 혈액형이면
 			/*
 			 * 혈액형을 전문적으로 처리하는 컨트롤러에게 업무 분담!
 			 * 요청에 대한 처리를 1:1 대응하는 객체로 처리하는 개발 패턴 : Command Pattern
 			 * */
-			BloodController controller = new BloodController();
-			controller.execute(request, response);
+			controller = new BloodController();
 		} else if(request.getRequestURI().equals("/color.do")) {
-			ColorController controller=new ColorController();
-			controller.execute(request, response);
+			controller=new ColorController();
 		}
+		controller.execute(request, response);
 	}
 	
 
