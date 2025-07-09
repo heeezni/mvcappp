@@ -1,0 +1,55 @@
+이 애플리케이션은 Spring MVC와 같은 프레임워크를 사용하지 않고, 자체적으로 구현된 MVC 패턴을 따릅니다. 핵심은 `DispatcherServlet`에 있습니다.
+
+**1. `web.xml` (배포 서술자):**
+*   `dispatcher`라는 이름의 서블릿을 정의하고, 이 서블릿을 `com.sinse.mvcappp.controller.DispatcherServlet` 클래스에 매핑합니다.
+*   모든 `.do` 확장자를 가진 HTTP 요청이 이 `DispatcherServlet`으로 라우팅되도록 설정되어 있습니다.
+
+**2. `DispatcherServlet.java` (컨트롤러 - 중앙 디스패처):**
+*   모든 `.do` 요청의 중앙 진입점 역할을 합니다.
+*   `doGet`과 `doPost` 메서드는 모두 `doRequest` 메서드를 호출하여 GET 및 POST 요청을 동일하게 처리합니다.
+*   `doRequest` 내부에서는 `request.getRequestURI()`를 확인하는 `if-else if` 문을 사용하여 요청을 처리합니다.
+    *   요청 URI가 `/blood.do`인 경우:
+        *   요청에서 `blood` 파라미터를 가져옵니다.
+        *   `BloodManager` 인스턴스(모델)를 생성합니다.
+        *   `manager.getAdvice(blood)`를 호출하여 비즈니스 로직을 수행하고 결과를 얻습니다.
+        *   결과를 `HttpSession`에 `msg`라는 이름으로 저장합니다.
+        *   클라이언트를 `/blood/result.jsp` (뷰)로 리다이렉트합니다.
+    *   요청 URI가 `/color.do`인 경우에도 유사하게 `ColorManager`를 사용하여 처리하고 `/color/result.jsp`로 리다이렉트합니다.
+*   **핵심 관찰:** `DispatcherServlet` 자체가 요청 매핑 로직(if-else if 체인)을 포함하고 있으며, `BloodManager` 및 `ColorManager`(모델)와 직접 상호 작용하고 뷰 리다이렉션을 수행합니다. `BloodController.java`나 `ColorController.java`는 현재 `DispatcherServlet`에 의해 사용되지 않습니다. `DispatcherServlet.java`의 주석은 이러한 `if` 문 방식의 단점을 명시하고 있습니다.
+
+**3. `BloodController.java` (미사용/잠재적 컨트롤러):**
+*   이 클래스는 `HttpServlet`을 상속하며 `doGet` 메서드를 가집니다. `BloodManager`를 인스턴스화하고 `getAdvice`를 호출하며, 결과를 세션에 설정하고 리다이렉션합니다.
+*   **중요한 점:** 현재 `DispatcherServlet.java`의 구현에 따르면, 이 `BloodController.java`는 `/blood.do` 요청을 처리하는 데 사용되지 않습니다. `DispatcherServlet`이 혈액형 로직을 직접 처리하고 있습니다. 이 클래스는 독립적인 서블릿이거나 다른 설계 접근 방식의 잔재로 보입니다.
+
+**4. `BloodManager.java` (모델):**
+*   이 클래스는 혈액형에 따른 조언을 결정하는 핵심 비즈니스 로직을 포함합니다.
+*   `getAdvice` 메서드는 `blood` 문자열을 받아 해당 메시지를 반환합니다.
+*   이 클래스는 MVC 패턴의 "모델" 부분으로, 데이터 및 비즈니스 규칙을 처리합니다.
+
+**5. `pom.xml` (프로젝트 설정):**
+*   프로젝트가 `war` 패키지로 정의되어 있습니다.
+*   로깅을 위한 `logback`과 상용구 코드 감소를 위한 `lombok`이 포함되어 있습니다.
+*   Spring Framework 종속성이 포함되어 있지 않아, 이것이 사용자 정의 MVC 구현임을 다시 한번 확인시켜 줍니다.
+
+**MVC 흐름 요약:**
+
+`mvcappp` 애플리케이션의 MVC 흐름은 다음과 같습니다.
+
+1.  **요청 (클라이언트 -> 웹 서버):** 클라이언트가 웹 서버로 HTTP 요청(예: `http://localhost:8080/mvcappp/blood.do?blood=A`)을 보냅니다.
+2.  **프론트 컨트롤러 (`web.xml` & `DispatcherServlet`):**
+    *   `web.xml`은 `.do`로 끝나는 모든 요청을 가로채 `DispatcherServlet`으로 전달합니다.
+    *   `DispatcherServlet`은 중앙 "프론트 컨트롤러" 역할을 하며 요청을 수신합니다.
+3.  **요청 처리 (`DispatcherServlet` - 컨트롤러 로직):**
+    *   `DispatcherServlet` 내부의 `doRequest` 메서드는 `request.getRequestURI()`를 검사합니다.
+    *   URI(예: `/blood.do`)에 따라 해당 로직을 직접 실행합니다.
+    *   관련 "Manager" 클래스(예: `BloodManager`)를 인스턴스화하여 모델 역할을 수행합니다.
+    *   Manager의 메서드(예: `bloodManager.getAdvice(blood)`)를 호출하여 비즈니스 로직을 수행하고 결과를 얻습니다.
+    *   결과를 `HttpSession`에 저장합니다.
+4.  **뷰 선택 (`DispatcherServlet` - 뷰 로직):**
+    *   처리 후 `DispatcherServlet`은 특정 JSP 페이지(예: `/blood/result.jsp`)로 `response.sendRedirect()`를 직접 수행합니다. 이 JSP 페이지는 세션에서 `msg` 속성을 검색하여 결과를 표시합니다.
+5.  **모델 (`BloodManager.java`):**
+    *   `BloodManager`(및 `ColorManager`) 클래스는 비즈니스 로직을 캡슐화합니다. 입력을 받아 처리하고 결과를 반환합니다. 이들은 웹 계층과 독립적입니다.
+6.  **뷰 (`result.jsp` - 추론됨):**
+    *   JSP 페이지는 컨트롤러가 준비한 데이터(이 경우 세션에 저장된 데이터)를 사용하여 사용자에게 최종 출력을 렌더링하는 역할을 합니다.
+
+**핵심 요약:** 이 애플리케이션은 `DispatcherServlet`이 요청 디스패칭, 모델과의 직접적인 상호 작용, 그리고 뷰로의 직접적인 리다이렉션을 모두 처리하는 매우 중앙 집중적이고 간소화된 사용자 정의 MVC 구현입니다. `BloodController.java` 및 `ColorController.java` 파일은 현재 `DispatcherServlet.java`에 구현된 방식으로는 디스패칭 체인의 일부가 아닙니다.
