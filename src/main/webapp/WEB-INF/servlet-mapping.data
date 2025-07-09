@@ -3,6 +3,7 @@
 #[컨트롤러 매핑]
 /blood.do=com.sinse.mvcappp.controller.BloodController
 /color.do=com.sinse.mvcappp.controller.ColorController
+
 /notice/list.do=com.sinse.mvcappp.controller.notice.ListController
 /notice/regist.do=com.sinse.mvcappp.controller.notice.RegistController
 /notice/content.do=com.sinse.mvcappp.controller.notice.DetailController
@@ -10,6 +11,12 @@
 #[뷰 페이지 매핑]
 /color/result/view=/color/result.jsp
 /blood/result/view=/blood/result.jsp
+
+# ListController
 /notice/list/view=/notice/list.jsp
+
+# RegistController
 /notice/regist/view=/notice/list.do
-/notice/detail/view=/notice/content.jsp
+
+# DetailController
+/notice/content/view=/notice/content.jsp

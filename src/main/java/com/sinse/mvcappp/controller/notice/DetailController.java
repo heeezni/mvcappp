@@ -29,7 +29,7 @@ public class DetailController implements Controller {
 
 	@Override
 	public String getViewPage() {
-		return "/notice/detail/view";
+		return "/notice/content/view";
 	}
 	
 }

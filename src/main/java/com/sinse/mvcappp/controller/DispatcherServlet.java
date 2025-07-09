@@ -72,8 +72,8 @@ public class DispatcherServlet extends HttpServlet {
 		Controller controller = null;
 
 		/*
-		 * 혈액형을 전문적으로 처리하는 컨트롤러에게 업무 분담! 요청에 대한 처리를 1:1 대응하는 객체로 처리하는 개발 패턴 : Command
-		 * Pattern
+		 * 혈액형을 전문적으로 처리하는 컨트롤러에게 업무 분담! 요청에 대한 처리를 1:1 대응하는 객체로 처리하는 개발 패턴 
+		 * : Command Pattern
 		 */
 		//controller = new BloodController(); 이것때문에 if문을 못 없애는 중
 		log.debug(props.getProperty(request.getRequestURI())); // key값으로 검색하면 오른쪽 문자열 검색됨
