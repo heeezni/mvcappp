@@ -85,6 +85,9 @@ public class DispatcherServlet extends HttpServlet {
 			controller=(Controller)cls.newInstance();
 			controller.execute(request, response); // 컨트롤러 실행
 			
+			//5) 알맞은 뷰 보여주기
+			response.sendRedirect(props.getProperty(controller.getViewPage())); // 클라이언트의 재접속 강제 
+			
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
 		} catch (InstantiationException e) {

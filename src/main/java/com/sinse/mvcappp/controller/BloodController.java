@@ -27,7 +27,16 @@ public class BloodController implements Controller{
 		// 4) 저장할 것이 있다면  (뷰로 가져갈 것이 있다면) 저장
 		HttpSession session=request.getSession(); // 이 요청에 의해 접근할 수 있는 세션 얻기
 		session.setAttribute("msg", result); // 저장
-		// 5) 알맞은 뷰 보여주기
-		response.sendRedirect("/blood/result.jsp"); // 클라이언트의 재접속 강제
+		
+		
+		/*// 5) 알맞은 뷰 보여주기
+		response.sendRedirect("/blood/result/view"); // 클라이언트의 재접속 강제 
+		5단계는 DispatcherServlet에게 넘기자
+		*/
+	}
+	
+	@Override
+	public String getViewPage() {
+		return "/blood/result/view";
 	}
 }

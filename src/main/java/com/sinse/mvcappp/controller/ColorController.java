@@ -45,10 +45,15 @@ public class ColorController implements Controller{
 		HttpSession session=request.getSession();
 		session.setAttribute("msg", result); // 세션에 보관 (톰캣 재가동, 브라우저 종료, 오랜시간 지나기 아니면 안죽음) 
 		
-		// result.jsp를 클라이언트가 보도록 처리
-		response.sendRedirect("/color/result.jsp"); // 클라이언트가 지정된 url로 다시 요청을 시도하도록 강제
+		/*// result.jsp를 클라이언트가 보도록 처리
+		response.sendRedirect("/color/result/view"); // 클라이언트가 지정된 url로 다시 요청을 시도하도록 강제
 		// <script>location.href='/color/result.jsp'</script>와 같은 효과
-		// 톰캣이 응답정보를 이용하여 응답 컨텐츠를 보내고 나서 클라이어느가 다시 접속 할 주소 
+		// 톰캣이 응답정보를 이용하여 응답 컨텐츠를 보내고 나서 클라이어느가 다시 접속 할 주소*/ 
+	}
+	
+	@Override
+	public String getViewPage() {
+		return "/color/result/view";
 	}
 	
 }
