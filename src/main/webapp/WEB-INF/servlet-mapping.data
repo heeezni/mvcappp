@@ -12,11 +12,9 @@
 /color/result/view=/color/result.jsp
 /blood/result/view=/blood/result.jsp
 
-# ListController
 /notice/list/view=/notice/list.jsp
 
 # RegistController
 /notice/regist/view=/notice/list.do
 
-# DetailController
 /notice/content/view=/notice/content.jsp
